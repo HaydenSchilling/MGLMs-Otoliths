@@ -1,0 +1,243 @@
+---
+title: "Salman Khan Shape Analysis"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+load("Shape_outlines_smoothed.RData")
+```
+
+
+
+```{r}
+#install.packages("shapeR")
+library(shapeR)
+library(vegan)
+```
+
+Load images
+```{r}
+shape = shapeR("D:/Salman Khan India/ShapeAnalysis", "FISH.csv")
+```
+
+Outline Extraction
+
+```{r}
+shape = detect.outline(shape, threshold = 0.1, write.outline.w.org = TRUE)
+```
+
+
+Remove dud outlines and re-run with different threshold
+```{r}
+shape = remove.outline(shape, "AG", "001_1")
+shape = remove.outline(shape, "AG", "001_5")
+shape = remove.outline(shape, "AG", "001_10")
+shape = remove.outline(shape, "AG", "001_12")
+shape = remove.outline(shape, "AG", "001_13")
+shape = remove.outline(shape, "AG", "001_14")
+shape = remove.outline(shape, "AG", "001_15")
+shape = remove.outline(shape, "AG", "001_16")
+
+
+shape = remove.outline(shape, "LU", "002_6")
+shape = remove.outline(shape, "LU", "002_7")
+shape = remove.outline(shape, "LU", "002_11")
+shape = remove.outline(shape, "LU", "002_13")
+shape = remove.outline(shape, "LU", "002_17")
+
+
+shape = remove.outline(shape, "NN", "003_3")
+shape = remove.outline(shape, "NN", "003_7")
+shape = remove.outline(shape, "NN", "003_9")
+shape = remove.outline(shape, "NN", "003_10")
+shape = remove.outline(shape, "NN", "003_11")
+shape = remove.outline(shape, "NN", "003_12")
+shape = remove.outline(shape, "NN", "003_13")
+shape = remove.outline(shape, "NN", "003_15")
+shape = remove.outline(shape, "NN", "003_17")
+shape = remove.outline(shape, "NN", "003_18")
+
+shape = detect.outline(shape, threshold = 0.2, write.outline.w.org = TRUE)
+```
+
+```{r}
+shape = remove.outline(shape, "AG", "001_1")
+shape = remove.outline(shape, "AG", "001_5")
+shape = remove.outline(shape, "AG", "001_12")
+shape = remove.outline(shape, "AG", "001_13")
+shape = remove.outline(shape, "AG", "001_15")
+shape = remove.outline(shape, "AG", "001_16")
+
+
+shape = remove.outline(shape, "LU", "002_6")
+shape = remove.outline(shape, "LU", "002_13")
+
+
+shape = remove.outline(shape, "NN", "003_9")
+shape = remove.outline(shape, "NN", "003_11")
+shape = remove.outline(shape, "NN", "003_12")
+shape = remove.outline(shape, "NN", "003_13")
+shape = remove.outline(shape, "NN", "003_15")
+shape = remove.outline(shape, "NN", "003_18")
+
+shape = detect.outline(shape, threshold = 0.3, write.outline.w.org = TRUE)
+```
+
+Now edit in GIMP and do again
+```{r}
+shape = remove.outline(shape, "AG", "001_1")
+shape = remove.outline(shape, "AG", "001_5")
+shape = remove.outline(shape, "AG", "001_12")
+shape = remove.outline(shape, "AG", "001_13")
+shape = remove.outline(shape, "AG", "001_15")
+shape = remove.outline(shape, "AG", "001_16")
+
+
+shape = remove.outline(shape, "LU", "002_6")
+shape = remove.outline(shape, "LU", "002_13")
+
+
+shape = remove.outline(shape, "NN", "003_11")
+shape = remove.outline(shape, "NN", "003_12")
+shape = remove.outline(shape, "NN", "003_13")
+shape = remove.outline(shape, "NN", "003_18")
+
+shape = detect.outline(shape, threshold = 0.2, write.outline.w.org = TRUE)
+```
+
+```{r}
+shape = remove.outline(shape, "AG", "001_1")
+shape = remove.outline(shape, "AG", "001_5")
+shape = remove.outline(shape, "AG", "001_12")
+shape = remove.outline(shape, "AG", "001_13")
+shape = remove.outline(shape, "AG", "001_15")
+shape = remove.outline(shape, "AG", "001_16")
+
+
+shape = remove.outline(shape, "LU", "002_6")
+shape = remove.outline(shape, "LU", "002_13")
+
+
+shape = remove.outline(shape, "NN", "003_3")
+shape = remove.outline(shape, "NN", "003_16")
+
+shape = detect.outline(shape, threshold = 0.15, write.outline.w.org = TRUE)
+```
+
+Fine touch the otoliths and re-run with the mouse.click in the console.
+```{r}
+
+shape = remove.outline(shape, "NN", "003_4")
+
+# Run in console
+#shape = detect.outline(shape, threshold = 0.3, write.outline.w.org = TRUE, mouse.click=TRUE)
+```
+
+
+
+```{r}
+save(shape, file = "Shape_outlines.RData")
+```
+
+
+
+```{r}
+shape = smoothout(shape, n=100)
+```
+
+```{r}
+save(shape, file = "Shape_outlines_smoothed.RData")
+```
+
+
+
+```{r}
+shape = generateShapeCoefficients(shape)
+shape = enrich.master.list(shape)
+```
+
+
+
+
+```{r}
+getMeasurements(shape)
+tapply(getMeasurements(shape)$otolith.area, getMasterlist(shape)$pop, mean)
+```
+
+
+
+```{r}
+plotWaveletShape(shape, "pop", show.angle = TRUE)
+plotFourierShape(shape, "pop", show.angle = TRUE)
+```
+
+
+```{r}
+shape = stdCoefs(shape, classes = 'pop', "length_cm", bonferroni = TRUE)
+```
+
+Find how good the estimation is - 10 Wavelets = 
+```{r}
+est.list = estimate.outline.reconstruction(shape)
+p <- outline.reconstruction.plot(est.list, max.num.harmonics = 15)
+p
+```
+
+```{r}
+est.list$w.dev.m
+```
+
+
+
+
+```{r}
+plotWavelet(shape, level = 5, class.name = "pop", useStdcoef = TRUE)
+```
+
+
+
+Classification Techniques
+
+```{r}
+cap.res = capscale(getStdWavelet(shape) ~ getMasterlist(shape)$pop)
+anova.cca(cap.res, by = "terms", step = 1000)
+shape.data <- getStdWavelet(shape)
+shape.info <- getMasterlist(shape)
+shape.combined.data <- cbind(shape.info, shape.data)
+
+write.csv(shape.combined.data, file = "shape_data.csv", row.names = F)
+
+```
+
+Cluster Analysis
+```{r}
+eig = eigenvals(cap.res, constrained = TRUE)
+eig.ratio = eig/sum(eig)
+cluster.plot(scores(cap.res)$sites[,1:2], getMasterlist(shape)$pop, 
+xlim = range(scores(cap.res)$sites[,1]), 
+ylim = range(scores(cap.res)$sites[,2]), 
+xlab = paste("CAP1 (", round(eig.ratio[1]*100,1),"%)",sep=""), 
+ylab = paste("CAP2 (", round(eig.ratio[2]*100,1),"%)",sep=""), plotCI=TRUE, conf.level = 0.95, las=1)
+
+```
+
+
+Classification
+```{r}
+pop = factor(getMasterlist(shape)$pop)
+library(ipred)
+mypredict.lda <- function(object, newdata)
+  predict(object, newdata = newdata)$class
+stdw = getStdWavelet(shape)
+pop = factor(getMasterlist(shape)$pop)
+dd = data.frame(stdw = stdw, pop = pop)
+errorest(pop ~., data = dd, model = lda, estimator = "cv", predict = mypredict.lda, est.para = control.errorest(nboot = 1000))
+```
+
+
+
+
