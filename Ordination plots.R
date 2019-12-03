@@ -67,8 +67,9 @@ load("combined_boral.Rdata")
 summ <- summary(combined_boral)
 summ
 combined_boral$hpdintervals
+par(mfrow = c(2,2))
 plot.boral(combined_boral) # to check assumptions
-#variance <- calc.varpart(fit.fishnb_no_mycts, groupX = NULL) # should give variance explained
+par(mfrow = c(1,1))
 
 lvsplot(combined_boral, biplot = F, est="median", return.vals = TRUE)
 lvs_data <- lvsplot(combined_boral, biplot = T, est="median", ind.spp = 10, return.vals = TRUE)
@@ -140,7 +141,9 @@ load("shape_boral.Rdata")
 summ <- summary(fit.fishnb_no_mycts)
 summ
 fit.fishnb_no_mycts$hpdintervals
+par(mfrow = c(2,2))
 plot.boral(shape_boral) # to check assumptions
+par(mfrow = c(1,1))
 #variance <- calc.varpart(fit.fishnb_no_mycts, groupX = NULL) # should give variance explained
 
 lvsplot(shape_boral, biplot = F, est="median", return.vals = TRUE)
@@ -203,7 +206,7 @@ fam = rep("tweedie", 12)
 # Attach the above together as a list
 all = list(Location = Location, Fish_community = Fish_community, fam = fam)
 
-fit.fishnb_no_mycts <- boral(y = Fish_community, family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
+fit.fishnb_no_mycts <- boral(y = sqrt(Fish_community), family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
                              save.model = TRUE, data = all)
 element_boral <- fit.fishnb_no_mycts
 save(element_boral, file = "element_boral.Rdata")
@@ -212,7 +215,10 @@ summ <- summary(element_boral)
 summ
 element_boral$hpdintervals
 plot.boral(element_boral) # to check assumptions
+par(mfrow = c(2,2))
+plot(element_boral)
 #variance <- calc.varpart(fit.fishnb_no_mycts, groupX = NULL) # should give variance explained
+par(mfrow = c(1,1))
 
 lvsplot(element_boral, biplot = F, est="median", return.vals = TRUE)
 lvs_data <- lvsplot(element_boral, biplot = T, est="median", ind.spp = 10, return.vals = TRUE)
@@ -248,7 +254,9 @@ pALL <- ggplot(data = combined_plot_data, aes(MDS1, MDS2))+
   xlab("Latent Variable 1") + ylab("Latent Variable 2") +
   geom_point(aes(color = group, shape = group), size = 2, alpha = 0.7) +  theme_bw()+ # scale_colour_manual(values=cbPalette) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  facet_wrap(~data) + theme_classic() +
+  facet_wrap(~data) + theme_classic() +  
+  scale_x_continuous(labels = c("-1", "-0.5", "0", "0.5", "1"), breaks = c(-1, -0.5, 0, 0.5, 1)) +
+  scale_y_continuous(labels = c("-1", "-0.5", "0", "0.5", "1"), breaks = c(-1, -0.5, 0, 0.5, 1)) +
   scale_colour_manual(values = c("black", "red", "blue")) +
   theme(axis.title.x = element_text(face="bold", colour="black", size = 18),
         axis.text.x  = element_text(colour="black", size = 14), 

@@ -48,3 +48,20 @@ summary(fitX)
 fitX
 anova(fitX) ### significant differences in variance between these groups for shape data
 plot(fitX) ## Visualise differences (AA is very different), similar to just elements
+
+
+### NMDS test (using chemical data)
+
+Fish_community = Fish[,c(15:77)]
+
+example_NMDS=metaMDS(Fish_community,k=2,trymax=100, distance = "euclidean")
+plot(example_NMDS)
+
+
+
+MDS_xy <- data.frame(example_NMDS$points)
+MDS_xy$Location <- Location
+
+library(ggplot2)
+ggplot(MDS_xy, aes(MDS1, MDS2, color = Location)) + geom_point() + theme_bw()
+# gave similar pattern but differences in dispersal are very evident
