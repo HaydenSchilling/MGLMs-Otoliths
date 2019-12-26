@@ -1,4 +1,4 @@
-# Multivariate generalised linear models for otolith chemistry and shape
+# Multivariate generalised linear models for otolith chemistry and shape in R
 
 ## This code and data accompanies Khan & Schilling (in review)
 
