@@ -1,49 +1,27 @@
 # Tweedie ordination for elements Analysis
 
+## The boral command line can be slow, these can be skipped by loading the boral files which were saved
+
 # Load packages and data
 #install.packages("mvabund")
 library(mvabund)
 # 
-# data(spider) # example data from mvabund
-# 
 #install.packages("boral")
 library(boral)
-# y <- spider$abund
-# fit.lvmp <- boral(y = y, family = "poisson", num.lv = 2, row.eff = "fixed")
-# summary(fit.lvmp)
-# fit.lvmp$hpdintervals
-# plot(fit.lvmp)
-# 
-# fit.lvmnb <- boral(y = y, family = "negative.binomial", num.lv = 2, row.eff = "fixed", offset = 1)
-# summary(fit.lvmnb)
-# fit.lvmnb$hpdintervals
-# plot(fit.lvmnb)
-# 
-# lvsplot(fit.lvmnb, biplot = FALSE)
 
-
-## COmbined shape and element
+## Combined shape and element
 # load data
-Fish = read.csv("Otolith_data_mmol_mol_Ca_and_shape.csv", header =T)
+Fish = read.csv("../Data/Otolith_data_mmol_mol_Ca_and_shape.csv", header =T)
 
 str(Fish)
-# Convert fish to integers if needed # not sure if needed
-#for(n in names(Fish)[1:38]){
-#  Fish[[n]]<-as.integer(Fish[[n]])}
-
 
 # Separate out the columns into important bits
 Location = as.factor(Fish[,2])
 Fish_community = as.mvabund(Fish[,c(3:77)]) #Select species (<3.4mm ESD)
-#Flow = Fish[,3]
-#DepthLocation <- as.factor(paste(Location, Depth, sep = "_"))
-#LocationDepth <- as.character(Fish$LocationDepth)
-#FLow_matrix <- matrix(Flow,nrow=length(Flow),ncol=19,byrow=FALSE)
-
-
 
 X <- model.matrix(~ Location) 
 
+# Set family for each variable, can vary for different variables
 
 fam = rep("tweedie", 75)
 #fam[25] = "poisson"
@@ -62,8 +40,8 @@ all = list(Location = Location, Fish_community = Fish_community, fam = fam)
 fit.fishnb_no_mycts <- boral(y = Fish_community, family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
                              save.model = TRUE, data = all)
 combined_boral <- fit.fishnb_no_mycts
-save(combined_boral, file = "combined_boral.Rdata")
-load("combined_boral.Rdata")
+save(combined_boral, file = "../Data/combined_boral.Rdata")
+load("../Data/combined_boral.Rdata")
 summ <- summary(combined_boral)
 summ
 combined_boral$hpdintervals
@@ -94,29 +72,18 @@ p1
 
 #### Now do just shape:
 
-## Larval fish analysis
 # load data
-Fish = read.csv("Otolith_data_mmol_mol_Ca_and_shape.csv", header =T)
+Fish = read.csv("../Data/Otolith_data_mmol_mol_Ca_and_shape.csv", header =T)
 
 str(Fish)
-# Convert fish to integers if needed # not sure if needed
-#for(n in names(Fish)[1:38]){
-#  Fish[[n]]<-as.integer(Fish[[n]])}
-
 
 # Separate out the columns into important bits
 Location = as.factor(Fish[,2])
-Fish_community = as.mvabund(Fish[,c(15:77)]) #Select species (<3.4mm ESD)
-#Flow = Fish[,3]
-#DepthLocation <- as.factor(paste(Location, Depth, sep = "_"))
-#LocationDepth <- as.character(Fish$LocationDepth)
-#FLow_matrix <- matrix(Flow,nrow=length(Flow),ncol=19,byrow=FALSE)
-
-
+Fish_community = as.mvabund(Fish[,c(15:77)]) #Select shape data only
 
 X <- model.matrix(~ Location) 
 
-
+# Set family
 fam = rep("tweedie", 63)
 #fam[25] = "poisson"
 #fam[24] = "poisson"
@@ -134,9 +101,9 @@ all = list(Location = Location, Fish_community = Fish_community, fam = fam)
 fit.fishnb_no_mycts <- boral(y = Fish_community, family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
                              save.model = TRUE, data = all)
 shape_boral <- fit.fishnb_no_mycts
-save(shape_boral, file = "shape_boral.Rdata")
+save(shape_boral, file = "../Data/shape_boral.Rdata")
 
-load("shape_boral.Rdata")
+load("../Data/shape_boral.Rdata")
 
 summ <- summary(fit.fishnb_no_mycts)
 summ
@@ -144,7 +111,6 @@ fit.fishnb_no_mycts$hpdintervals
 par(mfrow = c(2,2))
 plot.boral(shape_boral) # to check assumptions
 par(mfrow = c(1,1))
-#variance <- calc.varpart(fit.fishnb_no_mycts, groupX = NULL) # should give variance explained
 
 lvsplot(shape_boral, biplot = F, est="median", return.vals = TRUE)
 lvs_data <- lvsplot(shape_boral, biplot = F, est="median", ind.spp = 10, return.vals = TRUE)
@@ -166,32 +132,20 @@ p1 <- ggplot(data = NMDS_S, aes(MDS1, MDS2))+
 
 p1
 
-
 ### Now just do elements:
 
-## COmbined shape and element
 # load data
 Fish = read.csv("Otolith_data_mmol_mol_Ca_and_shape.csv", header =T)
 
 str(Fish)
-# Convert fish to integers if needed # not sure if needed
-#for(n in names(Fish)[1:38]){
-#  Fish[[n]]<-as.integer(Fish[[n]])}
-
 
 # Separate out the columns into important bits
 Location = as.factor(Fish[,2])
-Fish_community = as.mvabund(Fish[,c(3:14)]) #Select species (<3.4mm ESD)
-#Flow = Fish[,3]
-#DepthLocation <- as.factor(paste(Location, Depth, sep = "_"))
-#LocationDepth <- as.character(Fish$LocationDepth)
-#FLow_matrix <- matrix(Flow,nrow=length(Flow),ncol=19,byrow=FALSE)
-
-
+Fish_community = as.mvabund(Fish[,c(3:14)]) #Select elements only
 
 X <- model.matrix(~ Location) 
 
-
+# Set family
 fam = rep("tweedie", 12)
 #fam[25] = "poisson"
 #fam[24] = "poisson"
@@ -209,15 +163,14 @@ all = list(Location = Location, Fish_community = Fish_community, fam = fam)
 fit.fishnb_no_mycts <- boral(y = sqrt(Fish_community), family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
                              save.model = TRUE, data = all)
 element_boral <- fit.fishnb_no_mycts
-save(element_boral, file = "element_boral.Rdata")
-load("element_boral.Rdata")
+save(element_boral, file = "../Data/element_boral.Rdata")
+load("../Data/element_boral.Rdata")
 summ <- summary(element_boral)
 summ
 element_boral$hpdintervals
 plot.boral(element_boral) # to check assumptions
 par(mfrow = c(2,2))
 plot(element_boral)
-#variance <- calc.varpart(fit.fishnb_no_mycts, groupX = NULL) # should give variance explained
 par(mfrow = c(1,1))
 
 lvsplot(element_boral, biplot = F, est="median", return.vals = TRUE)

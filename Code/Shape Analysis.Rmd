@@ -3,25 +3,26 @@ title: "Salman Khan Shape Analysis"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+This code turns the otolith images into wavelet shape co-efficients (can also fo fourier transformation)
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+This code is based on Libungan & Palsson 2015  https://doi.org/10.1371/journal.pone.0121102
 
+This first one will skip most of the following code which is really slow (can only use if this file exists)
 ```{r}
-load("Shape_outlines_smoothed.RData")
+load("../Data/Shape_outlines_smoothed.RData")
 ```
 
 
-
+Start here if this is the first time.
 ```{r}
 #install.packages("shapeR")
 library(shapeR)
 library(vegan)
 ```
 
-Load images
+Load images - this needs full directory address to work
 ```{r}
-shape = shapeR("D:/Salman Khan India/ShapeAnalysis", "FISH.csv")
+shape = shapeR("D:/Salman Khan India/MGLMs-Otoliths/ShapeAnalysis", "FISH.csv")
 ```
 
 Outline Extraction
@@ -31,7 +32,7 @@ shape = detect.outline(shape, threshold = 0.1, write.outline.w.org = TRUE)
 ```
 
 
-Remove dud outlines and re-run with different threshold
+Remove dud outlines and re-run with different threshold - this is a large amount of trial and error
 ```{r}
 shape = remove.outline(shape, "AG", "001_1")
 shape = remove.outline(shape, "AG", "001_5")
@@ -87,7 +88,7 @@ shape = remove.outline(shape, "NN", "003_18")
 shape = detect.outline(shape, threshold = 0.3, write.outline.w.org = TRUE)
 ```
 
-Now edit in GIMP and do again
+Now edit in GIMP (image manipulation program) and do again
 ```{r}
 shape = remove.outline(shape, "AG", "001_1")
 shape = remove.outline(shape, "AG", "001_5")
@@ -128,7 +129,7 @@ shape = remove.outline(shape, "NN", "003_16")
 shape = detect.outline(shape, threshold = 0.15, write.outline.w.org = TRUE)
 ```
 
-Fine touch the otoliths and re-run with the mouse.click in the console.
+Fine touch the otoliths and re-run with the mouse.click in the console. Run this in the console, not a R notebook.
 ```{r}
 
 shape = remove.outline(shape, "NN", "003_4")
@@ -150,10 +151,11 @@ shape = smoothout(shape, n=100)
 ```
 
 ```{r}
-save(shape, file = "Shape_outlines_smoothed.RData")
+save(shape, file = "../Data/Shape_outlines_smoothed.RData")
 ```
 
 
+Start from here if you loaded the smoothed data
 
 ```{r}
 shape = generateShapeCoefficients(shape)
@@ -209,35 +211,9 @@ shape.data <- getStdWavelet(shape)
 shape.info <- getMasterlist(shape)
 shape.combined.data <- cbind(shape.info, shape.data)
 
-write.csv(shape.combined.data, file = "shape_data.csv", row.names = F)
+write.csv(shape.combined.data, file = "../Data/shape_data.csv", row.names = F)
 
 ```
-
-Cluster Analysis
-```{r}
-eig = eigenvals(cap.res, constrained = TRUE)
-eig.ratio = eig/sum(eig)
-cluster.plot(scores(cap.res)$sites[,1:2], getMasterlist(shape)$pop, 
-xlim = range(scores(cap.res)$sites[,1]), 
-ylim = range(scores(cap.res)$sites[,2]), 
-xlab = paste("CAP1 (", round(eig.ratio[1]*100,1),"%)",sep=""), 
-ylab = paste("CAP2 (", round(eig.ratio[2]*100,1),"%)",sep=""), plotCI=TRUE, conf.level = 0.95, las=1)
-
-```
-
-
-Classification
-```{r}
-pop = factor(getMasterlist(shape)$pop)
-library(ipred)
-mypredict.lda <- function(object, newdata)
-  predict(object, newdata = newdata)$class
-stdw = getStdWavelet(shape)
-pop = factor(getMasterlist(shape)$pop)
-dd = data.frame(stdw = stdw, pop = pop)
-errorest(pop ~., data = dd, model = lda, estimator = "cv", predict = mypredict.lda, est.para = control.errorest(nboot = 1000))
-```
-
 
 
 

@@ -1,4 +1,4 @@
-# Tweedie GLM for elements Analysis
+# Tweedie MGLM for Otolith Elemental Analysis
 
 library(utils)
 library(stringr)
@@ -6,8 +6,8 @@ library(mvabund)
 library(tweedie)
 library(statmod)
 
-
-mydata <- read.csv("Otolith_data_mmol_mol_Ca.csv", header = T)
+# load the data
+mydata <- read.csv("../Data/Otolith_data_mmol_mol_Ca.csv", header = T)
 mydata$Site <-  as.factor(str_sub(as.character(mydata[,1]), start = -1)) # Get site from sample name
 E_data <- mydata[,c(1:14,20)]
 names(E_data)[1] <- "ID"
@@ -20,9 +20,6 @@ plot(elements~E_data$Site) # quick rough plot of elements, x axis label wrong
 # summary(fit1)
 # plot(fit1)
 
-#M1 <- gllvm(y = elements, formula = mydata$pop, family = "tweedie", Power=1.01, plot = T)
-
-
 # Tweedie Function
 fit3 <- manyany("glm", elements, data = E_data, elements ~ Site, 
                 family = tweedie(var.power = 1.01), var.power = 1.01)
@@ -33,9 +30,9 @@ qqnorm(fit3$residuals)
 fitN <- manyany("glm", elements, data = E_data, elements ~ 1, 
                 family = tweedie(var.power = 1.01), var.power = 1.01)
 plot(fitN)
-anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 9999)
+anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 9999) # This could be very slow
 capture.output(anova_results,file="elements_anova_results.doc")
 
-save(fit3, file = "Elements Tweedie Model.rda")
+save(fit3, file = "../Data/Elements Tweedie Model.rda")
 
 paste("THIS SCRIPT HAS FINISHED")
