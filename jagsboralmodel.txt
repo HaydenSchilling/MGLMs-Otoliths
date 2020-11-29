@@ -1,0 +1,117 @@
+## JAGS model written for boral version 1.9 on 2020-11-25 19:45:45 ##
+
+ model {
+	 ## Data Level ## 
+	 for(i in 1:n) {
+		 for(j in 1:p) { eta[i,j] <- inprod(lv.coefs[j,2:(num.lv+1)],lvs[i,]) }
+		 lambdanum[i,1] <- pow(exp(lv.coefs[1,1] + eta[i,1]),2-powerparam)/(lv.coefs[1,num.lv+2]*(2-powerparam))
+		 numfish[i,1] ~ dpois(lambdanum[i,1])
+		 choose.shape[i,1,1] <- numfish[i,1]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,1,1] <- 1/(lv.coefs[1,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[1,1] + eta[i,1]),powerparam-1))
+		 choose.shape[i,1,2] <- 1
+		 choose.rate[i,1,2] <- exp(-lambdanum[i,1])
+		 y[i,1] ~ dgamma(choose.shape[i,1,1+equals(y[i,1],0)],choose.rate[i,1,1+equals(y[i,1],0)]) 
+
+		 lambdanum[i,2] <- pow(exp(lv.coefs[2,1] + eta[i,2]),2-powerparam)/(lv.coefs[2,num.lv+2]*(2-powerparam))
+		 numfish[i,2] ~ dpois(lambdanum[i,2])
+		 choose.shape[i,2,1] <- numfish[i,2]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,2,1] <- 1/(lv.coefs[2,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[2,1] + eta[i,2]),powerparam-1))
+		 choose.shape[i,2,2] <- 1
+		 choose.rate[i,2,2] <- exp(-lambdanum[i,2])
+		 y[i,2] ~ dgamma(choose.shape[i,2,1+equals(y[i,2],0)],choose.rate[i,2,1+equals(y[i,2],0)]) 
+
+		 lambdanum[i,3] <- pow(exp(lv.coefs[3,1] + eta[i,3]),2-powerparam)/(lv.coefs[3,num.lv+2]*(2-powerparam))
+		 numfish[i,3] ~ dpois(lambdanum[i,3])
+		 choose.shape[i,3,1] <- numfish[i,3]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,3,1] <- 1/(lv.coefs[3,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[3,1] + eta[i,3]),powerparam-1))
+		 choose.shape[i,3,2] <- 1
+		 choose.rate[i,3,2] <- exp(-lambdanum[i,3])
+		 y[i,3] ~ dgamma(choose.shape[i,3,1+equals(y[i,3],0)],choose.rate[i,3,1+equals(y[i,3],0)]) 
+
+		 lambdanum[i,4] <- pow(exp(lv.coefs[4,1] + eta[i,4]),2-powerparam)/(lv.coefs[4,num.lv+2]*(2-powerparam))
+		 numfish[i,4] ~ dpois(lambdanum[i,4])
+		 choose.shape[i,4,1] <- numfish[i,4]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,4,1] <- 1/(lv.coefs[4,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[4,1] + eta[i,4]),powerparam-1))
+		 choose.shape[i,4,2] <- 1
+		 choose.rate[i,4,2] <- exp(-lambdanum[i,4])
+		 y[i,4] ~ dgamma(choose.shape[i,4,1+equals(y[i,4],0)],choose.rate[i,4,1+equals(y[i,4],0)]) 
+
+		 lambdanum[i,5] <- pow(exp(lv.coefs[5,1] + eta[i,5]),2-powerparam)/(lv.coefs[5,num.lv+2]*(2-powerparam))
+		 numfish[i,5] ~ dpois(lambdanum[i,5])
+		 choose.shape[i,5,1] <- numfish[i,5]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,5,1] <- 1/(lv.coefs[5,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[5,1] + eta[i,5]),powerparam-1))
+		 choose.shape[i,5,2] <- 1
+		 choose.rate[i,5,2] <- exp(-lambdanum[i,5])
+		 y[i,5] ~ dgamma(choose.shape[i,5,1+equals(y[i,5],0)],choose.rate[i,5,1+equals(y[i,5],0)]) 
+
+		 lambdanum[i,6] <- pow(exp(lv.coefs[6,1] + eta[i,6]),2-powerparam)/(lv.coefs[6,num.lv+2]*(2-powerparam))
+		 numfish[i,6] ~ dpois(lambdanum[i,6])
+		 choose.shape[i,6,1] <- numfish[i,6]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,6,1] <- 1/(lv.coefs[6,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[6,1] + eta[i,6]),powerparam-1))
+		 choose.shape[i,6,2] <- 1
+		 choose.rate[i,6,2] <- exp(-lambdanum[i,6])
+		 y[i,6] ~ dgamma(choose.shape[i,6,1+equals(y[i,6],0)],choose.rate[i,6,1+equals(y[i,6],0)]) 
+
+		 lambdanum[i,7] <- pow(exp(lv.coefs[7,1] + eta[i,7]),2-powerparam)/(lv.coefs[7,num.lv+2]*(2-powerparam))
+		 numfish[i,7] ~ dpois(lambdanum[i,7])
+		 choose.shape[i,7,1] <- numfish[i,7]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,7,1] <- 1/(lv.coefs[7,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[7,1] + eta[i,7]),powerparam-1))
+		 choose.shape[i,7,2] <- 1
+		 choose.rate[i,7,2] <- exp(-lambdanum[i,7])
+		 y[i,7] ~ dgamma(choose.shape[i,7,1+equals(y[i,7],0)],choose.rate[i,7,1+equals(y[i,7],0)]) 
+
+		 lambdanum[i,8] <- pow(exp(lv.coefs[8,1] + eta[i,8]),2-powerparam)/(lv.coefs[8,num.lv+2]*(2-powerparam))
+		 numfish[i,8] ~ dpois(lambdanum[i,8])
+		 choose.shape[i,8,1] <- numfish[i,8]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,8,1] <- 1/(lv.coefs[8,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[8,1] + eta[i,8]),powerparam-1))
+		 choose.shape[i,8,2] <- 1
+		 choose.rate[i,8,2] <- exp(-lambdanum[i,8])
+		 y[i,8] ~ dgamma(choose.shape[i,8,1+equals(y[i,8],0)],choose.rate[i,8,1+equals(y[i,8],0)]) 
+
+		 lambdanum[i,9] <- pow(exp(lv.coefs[9,1] + eta[i,9]),2-powerparam)/(lv.coefs[9,num.lv+2]*(2-powerparam))
+		 numfish[i,9] ~ dpois(lambdanum[i,9])
+		 choose.shape[i,9,1] <- numfish[i,9]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,9,1] <- 1/(lv.coefs[9,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[9,1] + eta[i,9]),powerparam-1))
+		 choose.shape[i,9,2] <- 1
+		 choose.rate[i,9,2] <- exp(-lambdanum[i,9])
+		 y[i,9] ~ dgamma(choose.shape[i,9,1+equals(y[i,9],0)],choose.rate[i,9,1+equals(y[i,9],0)]) 
+
+		 lambdanum[i,10] <- pow(exp(lv.coefs[10,1] + eta[i,10]),2-powerparam)/(lv.coefs[10,num.lv+2]*(2-powerparam))
+		 numfish[i,10] ~ dpois(lambdanum[i,10])
+		 choose.shape[i,10,1] <- numfish[i,10]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,10,1] <- 1/(lv.coefs[10,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[10,1] + eta[i,10]),powerparam-1))
+		 choose.shape[i,10,2] <- 1
+		 choose.rate[i,10,2] <- exp(-lambdanum[i,10])
+		 y[i,10] ~ dgamma(choose.shape[i,10,1+equals(y[i,10],0)],choose.rate[i,10,1+equals(y[i,10],0)]) 
+
+		 lambdanum[i,11] <- pow(exp(lv.coefs[11,1] + eta[i,11]),2-powerparam)/(lv.coefs[11,num.lv+2]*(2-powerparam))
+		 numfish[i,11] ~ dpois(lambdanum[i,11])
+		 choose.shape[i,11,1] <- numfish[i,11]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,11,1] <- 1/(lv.coefs[11,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[11,1] + eta[i,11]),powerparam-1))
+		 choose.shape[i,11,2] <- 1
+		 choose.rate[i,11,2] <- exp(-lambdanum[i,11])
+		 y[i,11] ~ dgamma(choose.shape[i,11,1+equals(y[i,11],0)],choose.rate[i,11,1+equals(y[i,11],0)]) 
+
+		 lambdanum[i,12] <- pow(exp(lv.coefs[12,1] + eta[i,12]),2-powerparam)/(lv.coefs[12,num.lv+2]*(2-powerparam))
+		 numfish[i,12] ~ dpois(lambdanum[i,12])
+		 choose.shape[i,12,1] <- numfish[i,12]*(2-powerparam)/(powerparam-1)
+		 choose.rate[i,12,1] <- 1/(lv.coefs[12,num.lv+2]*(powerparam-1)*pow(exp(lv.coefs[12,1] + eta[i,12]),powerparam-1))
+		 choose.shape[i,12,2] <- 1
+		 choose.rate[i,12,2] <- exp(-lambdanum[i,12])
+		 y[i,12] ~ dgamma(choose.shape[i,12,1+equals(y[i,12],0)],choose.rate[i,12,1+equals(y[i,12],0)]) 
+
+		 }
+	 ## Latent variables ##
+	 for(i in 1:n) { for(k in 1:num.lv) { lvs[i,k] ~ dnorm(0,1) } } 
+
+	 ## Process level and priors ##
+	 for(j in 1:p) { lv.coefs[j,1] ~ dnorm(0,0.1) } ## Separate species intercepts
+	 powerparam ~ dunif(1,2) ## Tweedie power parameter
+
+	 for(i in 1:(num.lv-1)) { for(j in (i+2):(num.lv+1)) { lv.coefs[i,j] <- 0 } } ## Constraints to 0 on upper diagonal
+	 for(i in 1:num.lv) { lv.coefs[i,i+1] ~ dnorm(0,0.1)I(0,) } ## Sign constraints on diagonal elements
+	 for(i in 2:num.lv) { for(j in 2:i) { lv.coefs[i,j] ~ dnorm(0,0.1) } } ## Free lower diagonals
+	 for(i in (num.lv+1):p) { for(j in 2:(num.lv+1)) { lv.coefs[i,j] ~ dnorm(0,0.1) } } ## All other elements
+	 for(j in 1:p) { lv.coefs[j,num.lv+2] ~ dunif(0,30) } ## Dispersion parameters
+
+	 }

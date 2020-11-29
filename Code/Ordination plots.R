@@ -23,30 +23,19 @@ X <- model.matrix(~ Location)
 
 # Set family for each variable, can vary for different variables
 
-fam = rep("tweedie", 75)
-#fam[25] = "poisson"
-#fam[24] = "poisson"
-#fam[23] = "poisson"
-#fam[22] = "poisson"
-#fam[21] = "poisson"
-#fam[1] = "lnormal"
-#fam[3] = "lnormal"
-#fam[4] = "lnormal"
-#fam[2] = "lnormal"
-
 # Attach the above together as a list
-all = list(Location = Location, Fish_community = Fish_community, fam = fam)
+all = list(Location = Location, Fish_community = Fish_community, fam = "tweedie")
 
 fit.fishnb_no_mycts <- boral(y = Fish_community, family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
                              save.model = TRUE, data = all)
 combined_boral <- fit.fishnb_no_mycts
 save(combined_boral, file = "../Data/combined_boral.Rdata")
-load("../Data/combined_boral.Rdata")
+load("Data/combined_boral.Rdata")
 summ <- summary(combined_boral)
 summ
 combined_boral$hpdintervals
 par(mfrow = c(2,2))
-plot.boral(combined_boral) # to check assumptions
+plot(combined_boral) # to check assumptions
 par(mfrow = c(1,1))
 
 lvsplot(combined_boral, biplot = F, est="median", return.vals = TRUE)
@@ -83,20 +72,9 @@ Fish_community = as.mvabund(Fish[,c(15:77)]) #Select shape data only
 
 X <- model.matrix(~ Location) 
 
-# Set family
-fam = rep("tweedie", 63)
-#fam[25] = "poisson"
-#fam[24] = "poisson"
-#fam[23] = "poisson"
-#fam[22] = "poisson"
-#fam[21] = "poisson"
-#fam[1] = "lnormal"
-#fam[3] = "lnormal"
-#fam[4] = "lnormal"
-#fam[2] = "lnormal"
 
 # Attach the above together as a list
-all = list(Location = Location, Fish_community = Fish_community, fam = fam)
+all = list(Location = Location, Fish_community = Fish_community, fam = "tweedie")
 
 fit.fishnb_no_mycts <- boral(y = Fish_community, family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
                              save.model = TRUE, data = all)
@@ -135,7 +113,7 @@ p1
 ### Now just do elements:
 
 # load data
-Fish = read.csv("Otolith_data_mmol_mol_Ca_and_shape.csv", header =T)
+Fish = read.csv("Data/Otolith_data_mmol_mol_Ca_and_shape.csv", header =T)
 
 str(Fish)
 
@@ -145,22 +123,10 @@ Fish_community = as.mvabund(Fish[,c(3:14)]) #Select elements only
 
 X <- model.matrix(~ Location) 
 
-# Set family
-fam = rep("tweedie", 12)
-#fam[25] = "poisson"
-#fam[24] = "poisson"
-#fam[23] = "poisson"
-#fam[22] = "poisson"
-#fam[21] = "poisson"
-#fam[1] = "lnormal"
-#fam[3] = "lnormal"
-#fam[4] = "lnormal"
-#fam[2] = "lnormal"
-
 # Attach the above together as a list
-all = list(Location = Location, Fish_community = Fish_community, fam = fam)
+all = list(Location = Location, Fish_community = Fish_community, fam = "tweedie")
 
-fit.fishnb_no_mycts <- boral(y = sqrt(Fish_community), family = fam,lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
+fit.fishnb_no_mycts <- boral(y = sqrt(Fish_community), family = "tweedie",lv.control = list(num.lv = 2, type = "independent", distmat = NULL), #num.lv = 2, 
                              save.model = TRUE, data = all)
 element_boral <- fit.fishnb_no_mycts
 save(element_boral, file = "../Data/element_boral.Rdata")
