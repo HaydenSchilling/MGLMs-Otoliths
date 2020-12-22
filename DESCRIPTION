@@ -1,0 +1,31 @@
+Type: Compendium
+Package: MGLMs-Otoliths
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.1
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com")
+Description: Example code for Khan et al
+License: What license it uses
+Depends: 
+    boral,
+    DHARMa,
+    dplyr,
+    ecoCopula,
+    ggplot2,
+    gllvm,
+    MASS,
+    mvabund,
+    plyr,
+    rmarkdown,
+    shapeR,
+    statmod,
+    stringr,
+    tidyverse,
+    tweedie,
+    utils,
+    vegan
+Encoding: UTF-8
+LazyData: true
