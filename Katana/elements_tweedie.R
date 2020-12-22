@@ -25,14 +25,14 @@ plot(fit1)
 
 # Tweedie Function
 fit3 <- manyany("glm", elements, data = E_data, elements ~ Site, 
-                family = tweedie(var.power = 1.9), var.power = 1.9)
+                family = tweedie(var.power = 1.75, link.power = 0), var.power = 1.75)
 plot(fit3)
 qqnorm(fit3$residuals)
 # Null model for Tweedie
 fitN <- manyany("glm", elements, data = E_data, elements ~ 1, 
-                family = tweedie(var.power = 1.9), var.power = 1.9)
+                family = tweedie(var.power = 1.75, link.power = 0), var.power = 1.75)
 plot(fitN)
-anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 9999)
+anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 999)
 capture.output(anova_results,file="elements_anova_results.doc")
 
 save(fit3, file = "Elements Tweedie Model.rda")

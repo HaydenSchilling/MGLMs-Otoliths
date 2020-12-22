@@ -1,33 +1,14 @@
-# make mean variance plots to investigate otolith data
+# Mean_variance plots
+
+# objects from the _tweedie scripts
+meanvar.plot(elements_only)
+shape_only
+elements_and_shape
+
+options(scipen=99)
+
 par(mfrow=c(1,3))
-
-
-library(utils)
-library(mvabund)
-library(tweedie)
-library(statmod)
-library(gllvm)
-
-
-mydata <- read.csv("../Data/Otolith_data_mmol_mol_Ca.csv", header = T)
-mydata$Site <-  as.factor(str_sub(as.character(mydata[,1]), start = -1)) # Get site from sample name
-E_data <- mydata[,c(1:14,20)]
-names(E_data)[1] <- "ID"
-
-elements1 <- mvabund(E_data[,c(2:8,10:14)]) # select only element data
-#boxplot(elements) # inspect data ranges
-meanvar.plot(elements1) # check mean variance relationship
-
-mydata <- read.csv("../Data/shape_data.csv", header = T)
-
-elements2 <- mvabund(mydata[,c(13:75)]) # select only shape data
-meanvar.plot(elements2) # check mean variance relationship
-
-
-mydata <- read.csv("../Data/Otolith_data_mmol_mol_Ca_and_shape.csv", header = T)
-
-elements3 <- mvabund(mydata[,c(3:77)]) # select shape and element data
-#boxplot(elements) # inspect data ranges
-meanvar.plot(elements3) # check mean variance relationship
-
-# exported to illustrator to put in a single figure panel
+meanvar.plot(elements_only, mfrow =NULL, mfcol = NULL)
+meanvar.plot(shape_only, mfrow =NULL, mfcol = NULL, xlab="Mean (log scale)", yaxt='n')
+axis(side=2, at=c(0.001,0.01,0.1), labels=c(0.001,0.01,0.1))
+meanvar.plot(elements_and_shape, mfrow =NULL, mfcol = NULL)

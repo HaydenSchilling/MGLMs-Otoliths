@@ -15,6 +15,7 @@ names(E_data)[64] <- "ID"
 elements <- mvabund(E_data[,c(1:63)]) # select only shape data
 boxplot(elements) # inspect data ranges
 meanvar.plot(elements) # check mean variance relationship
+shape_only <- elements
 #plot(elements~mydata$pop) # quick rough plot of elements, x axis label wrong
 #fit1 <- manylm(elements ~ mydata$pop)
 #summary(fit1)
@@ -71,7 +72,7 @@ ggplot(mydata, aes(x=x, y=y, col = Site, shape = Site)) + geom_point() +
         legend.background = element_rect(colour="black"))
 
 
-points_to_plot_shape_MDS <- mydata %>% select(NMDS_x, NMDS_y, Site) %>% mutate(Data = "b) Shape Data")
+points_to_plot_shape_MDS <- mydata %>% dplyr::select(NMDS_x, NMDS_y, Site) %>% mutate(Data = "b) Shape Data")
 head(points_to_plot_shape_MDS)
 write_csv(points_to_plot_shape_MDS, "Data/Shape NMDS Ordination.csv")
 
@@ -80,30 +81,138 @@ write_csv(points_to_plot_shape_MDS, "Data/Shape NMDS Ordination.csv")
 
 # Tweedie Function
 fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
-                family = tweedie(var.power = 1.1), var.power = 1.1)
+                family = tweedie(var.power = 2, link.power = 0), var.power = 2)
 
 plot(fit3)
-qqnorm(residuals(fit3))
-abline(a=0,b=1)
+qqnorm(residuals.manyany(fit3))
+qqline(residuals.manyany(fit3))
+
 fit_s <- fit3
 
 # # Null model for Tweedie
 fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
-                 family = tweedie(var.power = 1.1), var.power = 1.1)
+                 family = tweedie(var.power = 2, link.power = 0), var.power = 2)
 
-anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 9999) # this could be very slow and was run on a HPC
+anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 999)
 capture.output(anova_results,file="shape_anova_results.doc")
 
 save(fit3, file = "../Data/Shape_Tweedie_Model.rda")
 
 paste("THIS SCRIPT HAS FINISHED")
 
-# # Do Ordination
-# 
-# library(ecoCopula)
-# element_LV=cord(fitN)
-# plot(element_LV,biplot = TRUE,site.col = E_data$ID)
-# plot(element_LV,site.col = E_data$ID)
-# plot(fitN)
-# qqnorm(residuals(fitN))
-# qqline(residuals(fitN))
+
+### Try pairwise by elimination
+
+library(utils)
+library(mvabund)
+library(tweedie)
+library(statmod)
+library(stringr)
+
+# Load the data
+mydata <- read.csv("Data/Otolith_data_mmol_mol_Ca_and_shape.csv", header = T)
+
+mydata <- subset(mydata, pop != "LL")
+mydata$Site <-  as.factor(str_sub(as.character(mydata[,1]), start = -1)) # Get site from sample name
+E_data <- mydata[,c(15:77,83)]
+names(E_data)[64] <- "ID"
+
+elements <- mvabund(E_data[,c(1:63)]) # select only shape data
+boxplot(elements) # inspect data ranges
+meanvar.plot(elements) # check mean variance relationship
+shape_only <- elements
+#plot(elements~mydata$pop) # quick rough plot of elements, x axis label wrong
+#fit1 <- manylm(elements ~ mydata$pop)
+
+
+# Tweedie Function
+fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
+                family = tweedie(var.power = 2, link.power = 0), var.power = 2)
+
+plot(fit3)
+qqnorm(residuals.manyany(fit3))
+qqline(residuals.manyany(fit3))
+
+# # Null model for Tweedie
+fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
+                family = tweedie(var.power = 2, link.power=0), var.power = 2)
+
+anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 999)
+capture.output(anova_results,file="shape_anova_results NO L.doc")
+anova_results
+save(fit3, file = "Data/Shape_Tweedie_Model_NO_L.rda")
+
+paste("THIS SCRIPT HAS FINISHED")
+
+
+### Now NO A
+
+mydata <- read.csv("Data/Otolith_data_mmol_mol_Ca_and_shape.csv", header = T)
+
+mydata <- subset(mydata, pop != "AA")
+mydata$Site <-  as.factor(str_sub(as.character(mydata[,1]), start = -1)) # Get site from sample name
+E_data <- mydata[,c(15:77,83)]
+names(E_data)[64] <- "ID"
+
+elements <- mvabund(E_data[,c(1:63)]) # select only shape data
+boxplot(elements) # inspect data ranges
+meanvar.plot(elements) # check mean variance relationship
+shape_only <- elements
+#plot(elements~mydata$pop) # quick rough plot of elements, x axis label wrong
+#fit1 <- manylm(elements ~ mydata$pop)
+
+
+# Tweedie Function
+fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
+                family = tweedie(var.power = 2, link.power = 0), var.power = 2)
+
+plot(fit3)
+qqnorm(residuals.manyany(fit3))
+qqline(residuals.manyany(fit3))
+
+# # Null model for Tweedie
+fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
+                family = tweedie(var.power = 2, link.power=0), var.power = 2)
+
+anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 999)
+capture.output(anova_results,file="shape_anova_results NO A.doc")
+
+save(fit3, file = "Data/Shape_Tweedie_Model_NO_A.rda")
+
+paste("THIS SCRIPT HAS FINISHED")
+
+### NOW NO N
+
+mydata <- read.csv("Data/Otolith_data_mmol_mol_Ca_and_shape.csv", header = T)
+
+mydata <- subset(mydata, pop != "NN")
+mydata$Site <-  as.factor(str_sub(as.character(mydata[,1]), start = -1)) # Get site from sample name
+E_data <- mydata[,c(15:77,83)]
+names(E_data)[64] <- "ID"
+
+elements <- mvabund(E_data[,c(1:63)]) # select only shape data
+boxplot(elements) # inspect data ranges
+meanvar.plot(elements) # check mean variance relationship
+shape_only <- elements
+#plot(elements~mydata$pop) # quick rough plot of elements, x axis label wrong
+#fit1 <- manylm(elements ~ mydata$pop)
+
+
+# Tweedie Function
+fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
+                family = tweedie(var.power = 2, link.power = 0), var.power = 2)
+
+plot(fit3)
+qqnorm(residuals.manyany(fit3))
+qqline(residuals.manyany(fit3))
+
+# # Null model for Tweedie
+fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
+                family = tweedie(var.power = 2, link.power=0), var.power = 2)
+
+anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 999) 
+capture.output(anova_results,file="shape_anova_results NO N.doc")
+
+save(fit3, file = "Data/Shape_Tweedie_Model_NO_N.rda")
+
+paste("THIS SCRIPT HAS FINISHED")

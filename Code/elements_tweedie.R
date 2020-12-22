@@ -16,6 +16,7 @@ names(E_data)[1] <- "ID"
 elements <- mvabund(E_data[,c(2:8,10:14)]) # select only element data
 boxplot(elements) # inspect data ranges
 meanvar.plot(elements) # check mean variance relationship
+elements_only <- elements
 plot(elements~E_data$Site) # quick rough plot of elements, x axis label wrong
 # fit1 <- manylm(elements ~ E_data$Site)
 # summary(fit1)
@@ -73,7 +74,7 @@ ggplot(mydata, aes(x=x, y=y, col = Site, shape = Site)) + geom_point() +
         legend.background = element_rect(colour="black"))
 
 
-points_to_plot_elements_MDS <- mydata %>% select(NMDS_x, NMDS_y, Site) %>% mutate(Data = "a) Chemistry Data")
+points_to_plot_elements_MDS <- mydata %>% dplyr::select(NMDS_x, NMDS_y, Site) %>% mutate(Data = "a) Chemistry Data")
 head(points_to_plot_elements_MDS)
 write_csv(points_to_plot_elements_MDS, "Data/Elements NMDS Ordination.csv")
 
@@ -81,8 +82,9 @@ write_csv(points_to_plot_elements_MDS, "Data/Elements NMDS Ordination.csv")
 # do model selection to set var.power
 
 fit3 <- manyany("glm", elements, data = E_data, elements ~ Site, 
-                family = tweedie(var.power = 1.9), var.power = 1.9)
-plot(fit3, log ="x")
+                family = tweedie(var.power = 1.75, link.power = 0), var.power = 1.75)
+plot(fit3)
+
 qqnorm(residuals.manyany(fit3))
 qqline(residuals.manyany(fit3))
 
@@ -90,9 +92,9 @@ fit_e <- fit3 # for plotting later
 
 # Null model for Tweedie
 fitN <- manyany("glm", elements, data = E_data, elements ~ 1, 
-                family = tweedie(var.power = 1.9), var.power = 1.9)
+                family = tweedie(var.power = 1.75, link.power = 0), var.power = 1.75)
 plot(fitN)
-anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 9999) # This could be very slow
+anova_results <- anova(fitN, fit3, p.uni = "unadjusted", nBoot = 999, nCores = 3) # This could be very slow
 capture.output(anova_results,file="elements_anova_results.doc")
 
 save(fit3, file = "../Data/Elements Tweedie Model.rda")
@@ -113,3 +115,24 @@ qqline(residuals(fitN))
 library(gllvm)
 fitX <- gllvm(y = elements, family = "tweedie", Power = 1.9)
 ordiplot.gllvm(fitX)
+
+
+### plots of elements
+mydata_long <- mydata %>% dplyr::select(-Ca) %>% pivot_longer(cols=c(Ni:Ba), values_to="Ratio", names_to="Element")
+head(mydata_long)
+
+mydata_long_sum <- mydata_long %>% group_by(Site, Element) %>% summarise(Mean_ratio = mean(Ratio), SD_Ratio = sd(Ratio), n=n(), SE_Ratio = SD_Ratio/sqrt(n))
+
+ggplot(mydata_long_sum, aes(x=Site, y = Mean_ratio)) + geom_bar(stat="identity", fill="grey60") +
+  facet_wrap(~Element, scales="free_y") + theme_classic()+
+  ylab(bquote(bold("Element:Ca (mmol mol"^-1*")")))+
+  geom_errorbar(aes(ymin=Mean_ratio-SE_Ratio, ymax=Mean_ratio + SE_Ratio),width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  scale_x_discrete(breaks=c("A", "L", "N"), labels=c("Agra", "Lucknow", "Narora"))+
+  theme(axis.title = element_text(face="bold", size=12),
+        axis.text.y = element_text(colour="black", size = 10),
+        axis.text.x = element_text(colour="black", size = 10, angle=45, hjust = 1),
+        strip.text = element_text(size= 12, face="bold"))
+
+ggsave("Figures/Elements.pdf", height = 15, width = 18, units ="cm", dpi = 600)
+ggsave("Figures/Elements.png", height = 15, width = 18, units ="cm", dpi = 600)
