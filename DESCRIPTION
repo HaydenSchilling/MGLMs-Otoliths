@@ -16,6 +16,7 @@ Depends:
     ecoCopula,
     ggplot2,
     gllvm,
+    holepunch,
     MASS,
     mvabund,
     plyr,
@@ -27,5 +28,7 @@ Depends:
     tweedie,
     utils,
     vegan
+Remotes: 
+    karthik/holepunch
 Encoding: UTF-8
 LazyData: true
