@@ -1,0 +1,22 @@
+#!/bin/bash
+ 
+
+#PBS -l select=1:ncpus=1:mem=20gb
+
+#PBS -l walltime=200:00:00
+
+#PBS -j oe
+
+#PBS -M h.schilling@unsw.edu.au
+
+#PBS -m ae
+ 
+
+
+cd $HOME
+
+module add R/3.4.4
+module add gcc/4.9.4
+module add openmpi/1.8.3
+
+Rscript Combined_Tweedie.R
