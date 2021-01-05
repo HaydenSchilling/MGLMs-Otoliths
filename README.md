@@ -14,6 +14,7 @@ The Data folder contains the data which is called by the Code folder.
 
 The ShapeAnalysis folder contains the otolith images and data needed to extract the shape coefficients.
 
+The binder link below will create an R environment online where the analysis can be replicated. NOTE THIS WILL BE VERY SLOW TO START!
 <!-- badges: start -->
 [![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HaydenSchilling/MGLMs-Otoliths/Sci-Reps-resubmission?urlpath=rstudio)
 <!-- badges: end -->
