@@ -13,3 +13,7 @@ The Code folder contains all the code needed to run the analyses, this can be ad
 The Data folder contains the data which is called by the Code folder.
 
 The ShapeAnalysis folder contains the otolith images and data needed to extract the shape coefficients.
+
+<!-- badges: start -->
+[![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HaydenSchilling/MGLMs-Otoliths/Sci-Reps-resubmission?urlpath=rstudio)
+<!-- badges: end -->
