@@ -14,17 +14,17 @@ full_dat$Site <- revalue(full_dat$Site, c("A"="Agra", "N"="Narora", "L" = "Luckn
 str(full_dat)
 
 pALL <- ggplot(data = full_dat, aes(NMDS_x, NMDS_y))+
-  xlab("NMDS 1") + ylab("NMDS 2") +
+  xlab("nMDS 1") + ylab("nMDS 2") +
   geom_point(aes(color = Site, shape = Site), size = 2, alpha = 0.7) +  theme_bw()+ # scale_colour_manual(values=cbPalette) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   facet_wrap(~Data, scales = "free") + theme_classic() +  
   #scale_x_continuous(labels = c("-1", "-0.5", "0", "0.5", "1"), breaks = c(-1, -0.5, 0, 0.5, 1)) +
   #scale_y_continuous(labels = c("-1", "-0.5", "0", "0.5", "1"), breaks = c(-1, -0.5, 0, 0.5, 1)) +
   scale_colour_manual(values = c("black", "red", "blue")) +
-  theme(axis.title.x = element_text(face="bold", colour="black", size = 18),
-        axis.text.x  = element_text(colour="black", size = 14), 
-        axis.title.y = element_text(face="bold", colour="black", size = 18),
-        axis.text.y  = element_text(colour="black", size = 14),
+  theme(axis.title.x = element_text(face="bold", colour="black", size = 16),
+        axis.text.x  = element_text(colour="black", size = 12), 
+        axis.title.y = element_text(face="bold", colour="black", size = 16),
+        axis.text.y  = element_text(colour="black", size = 12),
         axis.ticks = element_line(colour="black"),
         strip.text = element_text(colour="black", face = "bold", size = 12, hjust=0),
         strip.background = element_rect(colour = "white"),
