@@ -1,4 +1,4 @@
-# Tweedie GLM for Otolith Shape Analysis
+# Gamma GLM for Otolith Shape Analysis
 # This was run on a HPC
 
 library(utils)
@@ -79,7 +79,7 @@ write_csv(points_to_plot_shape_MDS, "Data/Shape NMDS Ordination.csv")
 
 #ggsave("plots/Shape NMDS.png", dpi = 600, width =12, height = 12, units = "cm")
 
-# Tweedie Function
+# Gamma Function
 fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
                 family = tweedie(var.power = 2, link.power = 0), var.power = 2)
 
@@ -89,7 +89,7 @@ qqline(residuals.manyany(fit3))
 
 fit_s <- fit3
 
-# # Null model for Tweedie
+# # Null model for Gamma
 fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
                  family = tweedie(var.power = 2, link.power = 0), var.power = 2)
 
@@ -125,7 +125,7 @@ shape_only <- elements
 #fit1 <- manylm(elements ~ mydata$pop)
 
 
-# Tweedie Function
+# Gamma Function
 fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
                 family = tweedie(var.power = 2, link.power = 0), var.power = 2)
 
@@ -133,7 +133,7 @@ plot(fit3)
 qqnorm(residuals.manyany(fit3))
 qqline(residuals.manyany(fit3))
 
-# # Null model for Tweedie
+# # Null model for Gamma
 fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
                 family = tweedie(var.power = 2, link.power=0), var.power = 2)
 
@@ -162,7 +162,7 @@ shape_only <- elements
 #fit1 <- manylm(elements ~ mydata$pop)
 
 
-# Tweedie Function
+# Gamma Function
 fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
                 family = tweedie(var.power = 2, link.power = 0), var.power = 2)
 
@@ -170,7 +170,7 @@ plot(fit3)
 qqnorm(residuals.manyany(fit3))
 qqline(residuals.manyany(fit3))
 
-# # Null model for Tweedie
+# # Null model for Gamma
 fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
                 family = tweedie(var.power = 2, link.power=0), var.power = 2)
 
@@ -198,7 +198,7 @@ shape_only <- elements
 #fit1 <- manylm(elements ~ mydata$pop)
 
 
-# Tweedie Function
+# Gamma Function
 fit3 <- manyany("glm", elements, data = mydata, elements ~ pop, 
                 family = tweedie(var.power = 2, link.power = 0), var.power = 2)
 
@@ -206,7 +206,7 @@ plot(fit3)
 qqnorm(residuals.manyany(fit3))
 qqline(residuals.manyany(fit3))
 
-# # Null model for Tweedie
+# # Null model for Gamma
 fitN <- manyany("glm", elements, data = mydata, elements ~ 1, 
                 family = tweedie(var.power = 2, link.power=0), var.power = 2)
 
