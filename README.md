@@ -1,6 +1,6 @@
 # Multivariate generalised linear models for otolith chemistry and shape in R
 
-## This code and data accompanies Khan & Schilling *et al* (In Press)
+## This code and data accompanies Khan & Schilling *et al* (2021) https://doi.org/10.1038/s41598-021-87143-9
 
 By running this code, multivariate generalised linear models are run on otolith shape and otolith chemistry data separately and together. 
 This code:
